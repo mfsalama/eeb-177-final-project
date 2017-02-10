@@ -1,0 +1,23 @@
+Input / Output: 
+
+*I will be creating an input/ output function using R studio. I plan to plot the diversity of my group though time. I will be using this link to help me achieve my goal: 
+
+http://finzi.psych.upenn.edu/library/geoscale/html/geoscalePlot.html
+
+*Possible pseudocodes to achieve my goal in creating basic plots:
+
+data(traits)
+attach(traits)
+
+1. A simple bivariant plot
+
+Pseudocode:
+project_plot = plot age versus plot trait
+ geoscalePlot(age,trait)
+
+
+2. Including the entire time scale
+
+  Pseudocode:
+project_plot = geoscalePlot(age,trait,units=c("Eon","Era","Age","Epoch","Period"),type="l")
+
