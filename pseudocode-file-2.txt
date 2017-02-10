@@ -1,0 +1,66 @@
+Manipulating Data: 
+
+For this portion, I will do several things: 
+1)I plan to first extract the number of unique species.
+2)I plan to use occurrence data to calculate speciation and extinction rats through time. I will do this using the program
+Pyrate, after formating data appropriately 
+
+*Possibe Pseudocode:
+
+Formated_file = extract species names + their status ("extant" or "extinct") + minimum and maximum ages
+my_traits = sort uniq species + extract corresponding traits
+
+for every species in data_frog.csv
+	append a corresponding trait value
+	if data doesn't exist
+	print "NA"
+	else: 
+	print "species name + uniq trait"
+find missing values in data_frog.csv | remove the lines (since  PyRate can not deal with missing information)
+
+
+*A correctly formatted input file can be generated using an R function provided in the script ‘pyrate_utilities.r’ starting from a table with the fossil 
+occurrence data. All fossil occurrences need to be provided in a table (a tab-delimited text file), with species names, their status ("extant" or "extinct"), and 
+minimum and maximum ages as the columns. The minimum and maximum ages commonly correspond to the temporal boundaries of the stage a particular
+ fossil is assigned to and are generally available from the databases. At present, PyRate can not deal with missing information in these four columns, so make 
+sure that you remove these entries beforehand. One additional column may be added providing a trait value, if available, which can be used in the birth-
+death analysis (note that here, missing data are allowed, and should be given as NA). A typical input file may look like this:
+
+Species Status MinT MaxT Trait
+Ursus_etruscus extinct 1.9 2.6 90
+Ursus_etruscus extinct 1.2 1.8 90
+Ursus_etruscus extinct 2.6 3.4 90
+Agriotherium_insigne extinct 4.2 5.3 285
+Ursavus_brevirhinus extinct 8.2 9.0 80
+Ursavus_brevirhinus extinct 11.2 15.2 80
+Agriotherium_intermedium extinct 3.4 4.2 NA
+... ... ... ... ...
+
+This file can then be processed using the R function extract.ages from the R utilities script provided with PyRate package. To load the extract.ages function, open an R console and type:
+
+> source(file = "/path_to_file/pyrate_utilities.r")
+extract.ages
+
+The extract.ages function needs the path to the file containing the raw data and has a few options that can be specified.
+replicates
+
+This option allows the user to generate several replicates of the data set in a single input file, each time re-drawing the ages of the occurrences at random from uniform distributions with boundaries MinT and MaxT. The replicates can be analyzed in different runs (see PyRate command -j) and combining the results of these replicates is a way to account for the uncertainty of the true ages of the fossil occurrences (see also Silvestro et al. 2014). Examples:
+replicates=1 (default, generates 1 data set)
+replicates=10 (generates 10 random replicates of the data set)
+cutoff
+
+Specify a threshold to exclude fossil occurrences with a high temporal uncertainty, i.e. with a wide temporal range between MinT and MaxT. Examples:
+cutoff=NULL (default; all occurrences are kept in the data set)
+cutoff=5 (all occurrences with a temporal range of 5 Myr or higher are excluded from the data set)
+random
+
+Specify whether to take a random age (between MinT and MaxT) for each occurrence or the midpoint age. Note that this option defaults to TRUE if several replicates are generated (i.e. replicates > 1). Examples:
+random = TRUE (default)
+random = FALSE (use midpoint ages)
+
+The extract.ages function can be called in an R console as follows:
+
+> extract.ages(file = "/path_to_file/Ursidae.txt", replicates=10, cutoff=5, random=TRUE)
+
+This resamples 10 times the age of fossil occurrences randomly within the respective temporal ranges and generates a Python file (here called 'Ursidae_PyRate.py') that can now be imported in PyRate for diversification rate analyses.
+
