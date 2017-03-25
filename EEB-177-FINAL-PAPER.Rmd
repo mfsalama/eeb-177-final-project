@@ -6,6 +6,13 @@ output: pdf_document
 fontsize: 12pt
 
 ---
+\begin{figure}[t]
+\label{fig:pop}
+\includegraphics[width=15cm, height=15cm,keepaspectratio]{~/Desktop/eeb-177/final-project/Anura-pic-1.png}
+\centering
+\caption{Anura: Frogs and Toads}
+\end{figure}
+\clearpage
 
 ## Abstract
 
@@ -27,7 +34,6 @@ fontsize: 12pt
 
   After downloading the occurences of the *Anura* species as a csv, firstly it must be cleaned out on the command terminal and saved onto a new saved csv. Next, a code must be formulated and run in python, in order to further clean out the species row in order to ensure that the occurences data will be ready for further useage. This is an important starting point which will help import and modify the new csv of the chosen species even further, and ensure unity and the deletion of any altering of orginal names. An important note regarding the last part of this code is the usage of printing option for the capitalized words in the genus row. This option allows a person to only select the desired main name of an occurence's genus and leave out any extra unnecessary data given along in the same row. Here is the code which one can easily run on python:
   
-\begin{verbatim}
 ```{python, eval = F}
 
   
@@ -49,13 +55,11 @@ with open("/home/eeb177-student/Desktop/eeb-177/final-project/formatted_frog_dat
             else:
                 print("no match")
 ```
-\end{verbatim}
 
 ## 2) A code To Extract and Save All Desired Data:
 
   After the genus row of the desired data has been further cleaned and the csv in now ready to use as desired, the next code performed can allow a person to obtain certain rows he thinks he may need to further explore and extract those rows only further. In this case, this second code extracted the main components of the data such as the genus, species, minimum age, and maximum age of each occurence. Here is the code which must be run in python as well in order to successfully obtain all the needed data:
   
-\begin{verbatim}
 ```{python, eval = F}
   
 import csv
@@ -69,13 +73,11 @@ with open("/home/eeb177-student/Desktop/eeb-177/final-project/formatted-week-9-f
         #Note: in this case, 'genus' is row 0, species is row 1, min. age is row 2, and max. age is row 3 
 
 ```
-\end{verbatim}
 
 # 3) Function To Extract Extinct Species From Dataset:
 
   Once the desired data is ready to be used, it was best to begin exploring extinction rates of the *Anura* species. In order to explore this topic further, it is first best to attempt to understand the full picture by mainly analyzing a full list of the extinct species only. This next function can be done on python to obtain and extract a list of all extinct species from the full dataset list with a count as well, in order to have an idea of how large the quantity of the sub-list is: 
 
-\begin{verbatim}
 ```{python, eval = F}
 import csv
 
@@ -91,8 +93,7 @@ with open("/home/eeb177-student/Desktop/eeb-177/final-project/formatted-week-9-f
         print(str(counter) + ")" + row[0] + " " + "is extinct")
         counter += 1
 ```
-\end{verbatim}       
-
+    
 # 4) Using ggplots in R: 
 
   After obtaining all suitable lists of the above dataset and starting to explore the desired focus (exctinction in this species), it was finally time to begin exploring ggplot in R and create an occurence plot ! The codes provided below help one create a plot on R to obtain information about the first and last appearance for each unique species in the family Anura that is represented in the paleobioDB: 
@@ -175,8 +176,7 @@ frogs_occ
 # 5) Using Matplotlib in Python: 
 
   Matplotlib is a Python 2-D plotting library which produces publication quality figures in a variety of hardcopy formats and interactive environments across platforms. Matplotlib can be used in Python scripts, the Python and IPython shell, the jupyter notebook, web application servers, and four graphical user interface toolkits. Next, matplotlib can be used in python to create a richness plot in order to see the frequency over time and analyze any spcies that is **NOT** "0", or in other words, any species that is currently now extinct. First, a code with a populated dictionary must be made. Next, matplotlib can be utilized by plotting the desired 2-D plot. The codes shown below were inputed into python in order to obtain the plot shown below: 
-  
-\begin{verbatim}
+
 ```{python, eval = F}
 in_file = open("/home/eeb177-student/Desktop/eeb-177/final-project/formatted-week-9-frog-data.csv")
 in_file.readline()
@@ -216,7 +216,6 @@ plt.ylabel('Species Richness')
 plt.title("Anura Species Richness")
 plt.show()
 ```
-\end{verbatim}
 
 \begin{figure}[t]
 \label{fig:pop}
@@ -310,7 +309,7 @@ pbdb_orig_ext(frogs, rank="species", orig_ext=2, temporal_extent=c(0,200), res=1
   
 ## Discussion
 
-  Since several of the graphs were consistent in showing an unusual pattern of a sudden drop in extinction rates around 80-90 million years ago, this opens a new focus which can be closely examined and explored more in an upcoming paper for future reasearch. Another environmental factor seems to have a strong effect on the extinction rates during this time frame. After researching the topic further, the earliest phase of the Cretaceous generally experienced a warming trend that peaked about 100 million years ago, with a steady decline in mean temperature which ended in a rather abrupt drop in the last few million years [@Novacek_1980, @Bossuyt_2009]. Based on these credible papers, it can be assumed that the much warmer weather helped the species survive a lot better, which in return can be seen in a sudden decrease in extinction rates during this time frame in the graphs obtained. Perhaps, a future paper can explore different envrionmental conditions during that time period (80-90 million years ago), including the change of weather, to provide a much more evidence based approach to answering this question of sudden changes in extinction rates during that time. 
+  Since several of the graphs were consistent in showing an unusual pattern of a sudden drop in extinction rates around 80-90 million years ago, this opens a new focus which can be closely examined and explored more in an upcoming paper for future reasearch. Another environmental factor seems to have a strong effect on the extinction rates during this time frame. After researching the topic further, the earliest phase of the Cretaceous generally experienced a warming trend that peaked about 100 million years ago, with a steady decline in mean temperature which ended in a rather abrupt drop in the last few million years [Novacek_1980, Bossuyt_2009]. Based on these credible papers, it can be assumed that the much warmer weather helped the species survive a lot better, which in return can be seen in a sudden decrease in extinction rates during this time frame in the graphs obtained. Perhaps, a future paper can explore different envrionmental conditions during that time period (80-90 million years ago), including the change of weather, to provide a much more evidence based approach to answering this question of sudden changes in extinction rates during that time. 
 
 \clearpage
 
@@ -322,6 +321,6 @@ Duellman, W. E. 1975. On the classification of frogs. Occ. Pap. Mus. Nat. Hist. 
 
 Green, David Martin., and Stanley Keith. Sessions. Amphibian Cytogenetics and Evolution. San Diego: Academic, 1991. Print.
 
-Novacek, Michael J. “100 Million Years of Land Vertebrate Evolution: The Cretaceous-Early Tertiary Transition.” Annals of the Missouri Botanical Garden, vol. 86, no. 2, 1999, pp. 230–258., www.jstor.org/stable/2666178.
+Novacek, Michael J. “100 Million Years of Land Vertebrate Evolution: The Cretaceous-Early Tertiary Transition.” *Annals of the Missouri Botanical Garden*, vol. 86, no. 2, 1999, pp. 230–258., www.jstor.org/stable/2666178.
 
-Zhang, Peng, Dan Liang, Rong-Li Mao, David M. Hillis, David B. Wake, and David C. Cannatella. "Efficient Sequencing of Anuran MtDNAs and a Mitogenomic Exploration of the Phylogeny and Evolution of Frogs." Molecular Biology and Evolution. Oxford University Press, 11 May 2013. Web. 10 Mar. 2017.
+Zhang, Peng, Dan Liang, Rong-Li Mao, David M. Hillis, David B. Wake, and David C. Cannatella. "Efficient Sequencing of Anuran MtDNAs and a Mitogenomic Exploration of the Phylogeny and Evolution of Frogs." *Molecular Biology and Evolution*. Oxford University Press, 11 May 2013. Web. 10 Mar. 2017.
