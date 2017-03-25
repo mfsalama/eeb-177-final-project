@@ -1,0 +1,327 @@
+---
+title: "Anura: Extinction Rates and Sudden Drops"
+author: "Marina Salama"
+geometry: margin=1in
+output: pdf_document
+fontsize: 12pt
+
+---
+
+## Abstract
+
+  Firstly, this paper aims to analyze extinction rates through powerful programing tools such as matplotlib, ggplots, paleobioDB, and pyrate. Secondly, this paper aims to identify any unusal extinction rates patterns, and provide further suggestions regarding possible identifications and causes of such alterations.
+
+## Introduction
+
+  The species *Anura* (commonly known as frogs and toads) constitutes the vast majority, about 88%, of living amphibian diversity and is considered to be among the most diverse groups of vertebrates [@Zhang_2013]. *Anura* is the clade of living frogs and their close fossil relatives, and the name refers to the lack of a tail. In addition, compared with other amphibians, frogs have a wide distribution and occupy a diversity of habitats such as forests, grasslands, rivers, waterfalls, mudflats, mountaintops, and deserts [@Zhang_2013]. Firstly, this paper aims to analyze extinction rates through programing tools such as matplotlib, ggplots, paleobioDB, and pyrate. Secondly, this paper aims to identify any unusal extinction rates patterns, and provide further suggestions for possible identifications to causes of such alterations. 
+  
+## Materials
+
+  There are several essential resources this paper utilized in order to obtain the desired data successfully. Firstly, the main occurences data of the species *Anura* was extracted from the paleobio database at https://paleobiodb.org. Secondly, helpful programing tools such as matplotlib, ggplots, paleobioDB, and pyrate were used to summarize the occurences data extracted from the paleobio database in means of visual plots and graphs. Thirdly, the website of the UCLA Ecology and Evolution 177 class at UCLA at https://eeb177-w17.github.io/ was used as a foundation guidance for using the above mentioned programing tools efficiently. Finally, several credible pushlised papers were used to gain and enrich this paper with solid background information about the species in general. 
+  
+## Methods
+
+  There are seven main sections which were performed in order to explore this dataset further and obtain the desired results and plot. These main sections include: a code to get started, a code to extract all desired data and save it onto a cleaned csv, function to extract extinct species from dataset, using ggplot in R, using matplotlib in python, using package PaleobioDB in R, and running pyrate. 
+  
+## 1) A Code For Getting Genus Row Ready: 
+
+  After downloading the occurences of the *Anura* species as a csv, firstly it must be cleaned out on the command terminal and saved onto a new saved csv. Next, a code must be formulated and run in python, in order to further clean out the species row in order to ensure that the occurences data will be ready for further useage. This is an important starting point which will help import and modify the new csv of the chosen species even further, and ensure unity and the deletion of any altering of orginal names. An important note regarding the last part of this code is the usage of printing option for the capitalized words in the genus row. This option allows a person to only select the desired main name of an occurence's genus and leave out any extra unnecessary data given along in the same row. Here is the code which one can easily run on python:
+  
+\begin{verbatim}
+```{python, eval = F}
+
+  
+import csv
+import re
+
+
+pattern = r'[A-Z][a-z]+'   #get capitalized words !
+with open("/home/eeb177-student/Desktop/eeb-177/final-project/formatted_frog_data.csv", newline='') as infh:  #adjust this path depending on where saved
+    reader = csv.reader(infh)
+    
+    for row in reader:
+        if row[6] == "species":
+            genus = row[5].split(" ")[0]
+            ss = (row[5])
+            searchObj = re.search(pattern, ss)
+            if searchObj:
+                print(searchObj.group(0))
+            else:
+                print("no match")
+```
+\end{verbatim}
+
+## 2) A code To Extract and Save All Desired Data:
+
+  After the genus row of the desired data has been further cleaned and the csv in now ready to use as desired, the next code performed can allow a person to obtain certain rows he thinks he may need to further explore and extract those rows only further. In this case, this second code extracted the main components of the data such as the genus, species, minimum age, and maximum age of each occurence. Here is the code which must be run in python as well in order to successfully obtain all the needed data:
+  
+\begin{verbatim}
+```{python, eval = F}
+  
+import csv
+import re
+
+with open("/home/eeb177-student/Desktop/eeb-177/final-project/formatted-week-9-frog-data.csv", newline='') as infh:  #again, adjust path as needed
+    reader = csv.reader(infh)
+    for row in reader:
+        genus = row[0].split(" ")[0] 
+        print(genus + "," + row[1] + "," + row[2] + "," + row[3])
+        #Note: in this case, 'genus' is row 0, species is row 1, min. age is row 2, and max. age is row 3 
+
+```
+\end{verbatim}
+
+# 3) Function To Extract Extinct Species From Dataset:
+
+  Once the desired data is ready to be used, it was best to begin exploring extinction rates of the *Anura* species. In order to explore this topic further, it is first best to attempt to understand the full picture by mainly analyzing a full list of the extinct species only. This next function can be done on python to obtain and extract a list of all extinct species from the full dataset list with a count as well, in order to have an idea of how large the quantity of the sub-list is: 
+
+\begin{verbatim}
+```{python, eval = F}
+import csv
+
+def extinct_frog(species):
+    for row in reader:
+        if row[2] > '0':    #Any extinct species only
+            print(row[0])
+            
+with open("/home/eeb177-student/Desktop/eeb-177/final-project/formatted-week-9-frog-data.csv", newline='') as infh:
+    reader = csv.reader(infh)
+    counter = 0            # setting a count as well to see quantity
+    for row in reader:
+        print(str(counter) + ")" + row[0] + " " + "is extinct")
+        counter += 1
+```
+\end{verbatim}       
+
+# 4) Using ggplots in R: 
+
+  After obtaining all suitable lists of the above dataset and starting to explore the desired focus (exctinction in this species), it was finally time to begin exploring ggplot in R and create an occurence plot ! The codes provided below help one create a plot on R to obtain information about the first and last appearance for each unique species in the family Anura that is represented in the paleobioDB: 
+  
+```{r, echo= FALSE}
+library(ggplot2)
+
+frogs <- read.csv("/home/eeb177-student/Desktop/eeb-177/final-project/formatted-week-9-frog-data.csv", header = F, as.is = T) #set path appropriately
+```
+
+
+```{r}
+names(frogs) <- c("genus", "species", "minage", "maxage")
+
+head(frogs)
+```
+\clearpage
+
+```{r}
+frogs_occ <- ggplot(frogs, aes( species, ymin = maxage, ymax=minage, colour = genus))
+
+frogs_occ <- frogs_occ + geom_linerange()
+frogs_occ
+```
+\clearpage
+
+* This can be used to remove the legend: 
+
+```{r}
+frogs_occ <- frogs_occ + theme(legend.position="none")
+
+frogs_occ
+```
+\clearpage
+
+* This can be used to flip the axis:
+
+```{r}
+frogs_occ <- frogs_occ + coord_flip()
+
+frogs_occ
+```
+\clearpage
+
+* This can be used to make species a bit smaller and more readable:
+
+```{r}
+frogs_occ <- frogs_occ +  theme(axis.text.y = element_text(size=3))
+
+frogs_occ
+```
+\clearpage
+
+* This can be used to get rid of the tick marks on the y-axis:
+
+```{r}
+frogs_occ <- frogs_occ + theme(axis.ticks.y=element_blank())
+
+frogs_occ
+```
+\clearpage
+
+* Working a bit with the x-axis: 
+
+```{r}
+frogs_occ <- frogs_occ + scale_y_continuous(limits=c(0, 180), expand = c(0, 0), breaks=c(0, 20, 40, 60, 80, 100, 120, 140, 160, 180))
+
+frogs_occ
+```
+\clearpage
+
+* Finally, this was used to add titles:
+
+```{r}
+frogs_occ <- frogs_occ + labs(title = "Anura Fossil Occurrences", x = "Species", y = "Ma ago") + theme(plot.title = element_text(hjust = 0.5, size=22, face = "bold"), axis.title =element_text(size=20))
+frogs_occ
+```
+\clearpage
+
+# 5) Using Matplotlib in Python: 
+
+  Matplotlib is a Python 2-D plotting library which produces publication quality figures in a variety of hardcopy formats and interactive environments across platforms. Matplotlib can be used in Python scripts, the Python and IPython shell, the jupyter notebook, web application servers, and four graphical user interface toolkits. Next, matplotlib can be used in python to create a richness plot in order to see the frequency over time and analyze any spcies that is **NOT** "0", or in other words, any species that is currently now extinct. First, a code with a populated dictionary must be made. Next, matplotlib can be utilized by plotting the desired 2-D plot. The codes shown below were inputed into python in order to obtain the plot shown below: 
+  
+\begin{verbatim}
+```{python, eval = F}
+in_file = open("/home/eeb177-student/Desktop/eeb-177/final-project/formatted-week-9-frog-data.csv")
+in_file.readline()
+# set up empty dictionaries
+
+species_richness = {}
+
+# iterate through every line in the file
+for line in in_file:
+    #print(line)
+    
+    # It's a tab delimited file, so we can split the contents up into 
+    # the component rows
+    items = line.split(",")
+    
+    # Save some important pieces of information as variables
+    species = items[1]
+    min_age = float(items[2])
+    
+    
+    # Use the variables to populate our three empty lists
+    species_richness[species] = min_age
+    
+import matplotlib.pyplot as plt
+
+
+# Most plotting happens on lists, not dictionaries-
+# so, let's convert our data into a list
+min_age = list(species_richness.values())
+
+# We're ready to make a histogram!
+plt.hist(min_age)
+plt.xlabel('Time in million')
+# a y-axis label
+plt.ylabel('Species Richness')
+# A main title for the graph
+plt.title("Anura Species Richness")
+plt.show()
+```
+\end{verbatim}
+
+\begin{figure}[t]
+\label{fig:pop}
+\includegraphics[width=15cm, height=15cm,keepaspectratio]{~/Desktop/eeb-177/final-project/anura-matplotlib.png}
+\centering
+\caption{Anura Occurences Data on Matplotlib}
+\end{figure}
+
+# 6)  Using Package PaleobioDB in R:
+
+  Package PaleobioDB is a package in R which includes 19 functions to wrap each endpoint of the PaleobioDB API, plus 8 functions to visualize and process the fossil data. Using package PaleobioDB in R can help create plots for visualization purposes and a clearer understanding of the data one is working with. These important grphas shown below were obtained successfully with the help of this package:
+  
+```{r, echo= FALSE}
+#install.packages("paleobioDB")
+library(paleobioDB)
+
+#install.packages("devtools")
+library(devtools)
+#install_github("ropensci/paleobioDB")
+library(paleobioDB)
+```
+
+* Defining "Anura"= frogs and a list of occurences and names:
+
+```{r}
+frogs <-pbdb_occurrences (limit="all", vocab= "pbdb", base_name="Anura", show=c("coords", "phylo", "ident"))
+head(frogs)
+```
+
+* This provides the number of species my dataset in total:
+
+```{r}
+pbdb_subtaxa (frogs, do.plot=TRUE)  
+```
+
+* Here is a map of occurences which can be useful to identify an unusual extinction patterns by location: 
+
+```{r}
+pbdb_map(frogs)
+```
+
+* For general referance, here is a plot similar to the one created in ggplots for species richness with the number of species across time:
+
+```{r}
+pbdb_richness (frogs, rank="species", temporal_extent=c(0,200), res=10)
+```
+
+* Finally, here is the desired overall extinction plot with the number of last appearances of species query across the time: 
+
+```{r}
+# extinction rates= orig_ext=2
+pbdb_orig_ext(frogs, rank="species", orig_ext=2, temporal_extent=c(0,200), res=10)
+```
+
+# 7) Running Pyrate:
+
+   PyRate is a computer program to estimate speciation and extinction rates and their temporal dynamics from fossil occurrence data. The rates are inferred in a Bayesian framework and are comparable to those estimated from phylogenetic trees. Consequently, the final step was to run pyrate to have the ability of creating detailed extinction rates graphs. For the purposes of this paper, the dataset was run for 2,500,000 steps in order to ensure credibility. Here are the graphs obtained after running the program for about four and a half hours: 
+
+\begin{figure}[t]
+\label{fig:pop}
+\includegraphics[width=15cm, height=15cm,keepaspectratio]{~/Desktop/eeb-177/final-project/pyrate/anura-speciation-rate.png}
+\centering
+\caption{Anura Speciation Rate}
+\end{figure}
+
+\begin{figure}[t]
+\label{fig:pop}
+\includegraphics[width=15cm, height=15cm,keepaspectratio]{~/Desktop/eeb-177/final-project/pyrate/anura-extinction-rate.png}
+\centering
+\caption{Anura Extinction Rate}
+\end{figure}
+
+\begin{figure}[t]
+\label{fig:pop}
+\includegraphics[width=15cm, height=15cm,keepaspectratio]{~/Desktop/eeb-177/final-project/pyrate/anura-net-diverse-rate.png}
+\centering
+\caption{Anura Net Diversificatin Rate}
+\end{figure}
+
+\begin{figure}[t]
+\label{fig:pop}
+\includegraphics[width=15cm, height=15cm,keepaspectratio]{~/Desktop/eeb-177/final-project/pyrate/anura-longevity.png}
+\centering
+\caption{Anura Longevity Graph}
+\end{figure}
+\clearpage
+
+## Results
+
+  The main focus of this paper was to explore this dataset's exction patterns and rates. Some of the useful tools which assisted during this process included: a code to get started, a code to extract all desired data and save it onto a cleaned csv, function to extract extinct species from dataset, using ggplot in R, using matplotlib in python, using package PaleobioDB in R, and running pyrate. The results of the ggplot plot revealed an excellent variation of species through history. It also revealed a good amount of extant species currently still on earth today, which came as no surprise since the species *Anura* is very much known for its diversity today. A similar pattern was also shown in the matplotlib plot with a huge spike at 0 or present day. The matplotlib plot also showed smaller spikes in species richness at about 10-20, 60-80, and 120-140 million years. Next, after utilizing the paleobioDB package on R, a very unusual pattern emerged on the extinction rate plot. It revealed a consist increase in extinction rates throughout the years as one gets closer to present day. Shockingly, there is a clear big gap around 80-90 million years ago, with a non-exsistant exction rate. Consequently, this paper will next discuss further probable causes for this unusual pattern. Finally, after running pyrate, four graphs were created successfully: a speciation rate, an extinction rate, a net diversification rate, and a longevity graph. The speciation rate had a stable rate at about 0.065 rate, but a spike until around 0.1 appeared as present day (0) is approached. The extinction rate graph also reveals a stable and low rate until a huge spike of about 1.2 rate of extinction during present day, and a small drop around the same time that the unusual pattern on paleobioDB graph around 80-90 million years ago. The net diversification rate graph shows a stable net rate of almost 0 across time until present day where a big spike of about 1.2 can be seen. Also, the longevity graph from pyrate shows a stable rate of about 17 from 180-120 milion, an increase to about 20 rate wise which becomes stablized until about 20 million years ago. Finally, another increase can be seen which drops drastically until almost 0 by present day. 
+  
+## Discussion
+
+  Since several of the graphs were consistent in showing an unusual pattern of a sudden drop in extinction rates around 80-90 million years ago, this opens a new focus which can be closely examined and explored more in an upcoming paper for future reasearch. Another environmental factor seems to have a strong effect on the extinction rates during this time frame. After researching the topic further, the earliest phase of the Cretaceous generally experienced a warming trend that peaked about 100 million years ago, with a steady decline in mean temperature which ended in a rather abrupt drop in the last few million years [@Novacek_1980, @Bossuyt_2009]. Based on these credible papers, it can be assumed that the much warmer weather helped the species survive a lot better, which in return can be seen in a sudden decrease in extinction rates during this time frame in the graphs obtained. Perhaps, a future paper can explore different envrionmental conditions during that time period (80-90 million years ago), including the change of weather, to provide a much more evidence based approach to answering this question of sudden changes in extinction rates during that time. 
+
+\clearpage
+
+## References
+
+Bossuyt, Franky, and Kim Roelants. "Frogs and Toads." Van Nostrand's Scientific Encyclopedia (2005). Web. 
+
+Duellman, W. E. 1975. On the classification of frogs. Occ. Pap. Mus. Nat. Hist. Univ. Kansas (42):1-15.
+
+Green, David Martin., and Stanley Keith. Sessions. Amphibian Cytogenetics and Evolution. San Diego: Academic, 1991. Print.
+
+Novacek, Michael J. “100 Million Years of Land Vertebrate Evolution: The Cretaceous-Early Tertiary Transition.” Annals of the Missouri Botanical Garden, vol. 86, no. 2, 1999, pp. 230–258., www.jstor.org/stable/2666178.
+
+Zhang, Peng, Dan Liang, Rong-Li Mao, David M. Hillis, David B. Wake, and David C. Cannatella. "Efficient Sequencing of Anuran MtDNAs and a Mitogenomic Exploration of the Phylogeny and Evolution of Frogs." Molecular Biology and Evolution. Oxford University Press, 11 May 2013. Web. 10 Mar. 2017.
